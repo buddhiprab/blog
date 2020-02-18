@@ -10,6 +10,9 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-//    @Query("SELECT o FROM Post o WHERE o.title like :text")
-//    public List<Post> search(@Param("text") String text);
+
+    @Query("SELECT o FROM Post o WHERE o.title like %:text%")
+    List<Post> search(@Param("text") String text);
+
+    List<Post> findByTitleContaining(String text);
 }

@@ -36,4 +36,26 @@ public class PostService {
         }
         return postDtos;
     }
+
+    public List<PostDto> search(String text) {
+        List<PostDto> postDtos = new ArrayList<>();
+        List<Post> posts = postRepository.search(text);
+        for(Post post:posts){
+            PostDto postDto = new PostDto();
+            copyProperties(post,postDto);
+            postDtos.add(postDto);
+        }
+        return postDtos;
+    }
+
+    public List<PostDto> searchByTitle(String text) {
+        List<PostDto> postDtos = new ArrayList<>();
+        List<Post> posts = postRepository.findByTitleContaining(text);
+        for(Post post:posts){
+            PostDto postDto = new PostDto();
+            copyProperties(post,postDto);
+            postDtos.add(postDto);
+        }
+        return postDtos;
+    }
 }
