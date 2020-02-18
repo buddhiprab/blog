@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PostDto {
+public class PostDetailDto {
     private String title;
     private String content;
-    private List<CommentDto> comments;
+    private List<CommentDetailDto> comments;
 }

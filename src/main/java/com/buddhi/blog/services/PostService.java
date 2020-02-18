@@ -1,9 +1,13 @@
 package com.buddhi.blog.services;
 
+import com.buddhi.blog.dto.CommentDetailDto;
+import com.buddhi.blog.dto.CommentDto;
+import com.buddhi.blog.dto.PostDetailDto;
 import com.buddhi.blog.dto.PostDto;
+import com.buddhi.blog.models.Comment;
 import com.buddhi.blog.models.Post;
+import com.buddhi.blog.repositories.CommentRepository;
 import com.buddhi.blog.repositories.PostRepository;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 public class PostService {
     @Autowired
     PostRepository postRepository;
+    @Autowired
+    CommentRepository commentRepository;
 
     public Long createPost(PostDto postDto){
         Post post = new Post();
@@ -57,5 +63,28 @@ public class PostService {
             postDtos.add(postDto);
         }
         return postDtos;
+    }
+
+    public Long createComment(CommentDto commentDto) {
+        Comment comment = new Comment();
+        copyProperties(commentDto, comment);
+        comment.setCreationTime(new Date());
+        Comment commentDb = commentRepository.save(comment);
+        return commentDb.getId();
+    }
+
+    public PostDetailDto getPost(Long id) {
+        PostDetailDto postDetailDto = new PostDetailDto();
+        Post post = postRepository.findById(id).orElse(null);
+        copyProperties(post, postDetailDto);
+        List <Comment> comments = commentRepository.findByPostId(id);
+        List <CommentDetailDto> commentDetailDtos = new ArrayList<>();
+        for(Comment comment:comments){
+            CommentDetailDto commentDetailDto = new CommentDetailDto();
+            copyProperties(comment, commentDetailDto);
+            commentDetailDtos.add(commentDetailDto);
+        }
+        postDetailDto.setComments(commentDetailDtos);
+        return postDetailDto;
     }
 }

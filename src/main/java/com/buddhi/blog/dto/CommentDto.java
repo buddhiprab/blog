@@ -1,12 +1,11 @@
 package com.buddhi.blog.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class PostDto {
+public class CommentDto {
     private String title;
     private String content;
-    private List<CommentDto> comments;
+    private Long postId;
 }

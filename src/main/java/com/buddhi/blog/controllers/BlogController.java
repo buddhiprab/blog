@@ -1,5 +1,7 @@
 package com.buddhi.blog.controllers;
 
+import com.buddhi.blog.dto.CommentDto;
+import com.buddhi.blog.dto.PostDetailDto;
 import com.buddhi.blog.dto.PostDto;
 import com.buddhi.blog.models.Post;
 import com.buddhi.blog.services.PostService;
@@ -18,26 +20,38 @@ public class BlogController {
     PostService postService;
 
     @PostMapping("/createPost")
-    public ResponseEntity<Long> createPost(@RequestBody PostDto req){
-        Long id = postService.createPost(req);
+    public ResponseEntity<Long> createPost(@RequestBody PostDto postDto){
+        Long id = postService.createPost(postDto);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
-    @GetMapping("posts")
+    @GetMapping("/posts")
     public ResponseEntity<List<PostDto>> getPosts(){
         List<PostDto> postDtos = postService.getPosts();
         return new ResponseEntity<>(postDtos,HttpStatus.OK);
     }
 
-    @GetMapping("search/{text}")
+    @GetMapping("/search/{text}")
     public ResponseEntity<List<PostDto>> search(@PathVariable("text") String text){
         List<PostDto> postDtos = postService.search(text);
         return new ResponseEntity<>(postDtos,HttpStatus.OK);
     }
 
-    @GetMapping("search")
+    @GetMapping("/search")
     public ResponseEntity<List<PostDto>> searchByTitle(@RequestParam("title") String text){
         List<PostDto> postDtos = postService.searchByTitle(text);
         return new ResponseEntity<>(postDtos,HttpStatus.OK);
+    }
+
+    @PostMapping("/addComment")
+    public ResponseEntity<Long> addComment(@RequestBody CommentDto commentDto){
+        Long id = postService.createComment(commentDto);
+        return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<PostDetailDto> getPost(@PathVariable("id") Long id){
+        PostDetailDto postDetailDto = postService.getPost(id);
+        return new ResponseEntity<>(postDetailDto, HttpStatus.OK);
     }
 }
