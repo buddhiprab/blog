@@ -1,8 +1,6 @@
 package com.buddhi.blog.services;
 
-import com.buddhi.blog.dto.CommentDetailDto;
 import com.buddhi.blog.dto.CommentDto;
-import com.buddhi.blog.dto.PostDetailDto;
 import com.buddhi.blog.dto.PostDto;
 import com.buddhi.blog.models.Comment;
 import com.buddhi.blog.models.Post;
@@ -73,18 +71,23 @@ public class PostService {
         return commentDb.getId();
     }
 
-    public PostDetailDto getPost(Long id) {
-        PostDetailDto postDetailDto = new PostDetailDto();
+    public PostDto getPost(Long id) {
+        PostDto postDto = new PostDto();
         Post post = postRepository.findById(id).orElse(null);
-        copyProperties(post, postDetailDto);
+        copyProperties(post, postDto);
         List <Comment> comments = commentRepository.findByPostId(id);
-        List <CommentDetailDto> commentDetailDtos = new ArrayList<>();
+        List <CommentDto> commentDtos = new ArrayList<>();
         for(Comment comment:comments){
-            CommentDetailDto commentDetailDto = new CommentDetailDto();
-            copyProperties(comment, commentDetailDto);
-            commentDetailDtos.add(commentDetailDto);
+            CommentDto commentDto = new CommentDto();
+            copyProperties(comment, commentDto);
+            commentDtos.add(commentDto);
         }
-        postDetailDto.setComments(commentDetailDtos);
-        return postDetailDto;
+        postDto.setComments(commentDtos);
+        return postDto;
+    }
+
+    public Long deleteComment(Long postId, CommentDto commentDto) {
+        commentRepository.deleteComment(postId, commentDto.getId());
+        return commentDto.getId();
     }
 }

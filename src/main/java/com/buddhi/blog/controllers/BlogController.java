@@ -1,9 +1,7 @@
 package com.buddhi.blog.controllers;
 
 import com.buddhi.blog.dto.CommentDto;
-import com.buddhi.blog.dto.PostDetailDto;
 import com.buddhi.blog.dto.PostDto;
-import com.buddhi.blog.models.Post;
 import com.buddhi.blog.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,8 +48,14 @@ public class BlogController {
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<PostDetailDto> getPost(@PathVariable("id") Long id){
-        PostDetailDto postDetailDto = postService.getPost(id);
-        return new ResponseEntity<>(postDetailDto, HttpStatus.OK);
+    public ResponseEntity<PostDto> getPost(@PathVariable("id") Long id){
+        PostDto postDto = postService.getPost(id);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/deleteComment/{postId}")
+    public ResponseEntity<Long> deleteComment(@PathVariable("postId") Long postId, @RequestBody CommentDto commentDto){
+        Long id = postService.deleteComment(postId, commentDto);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }
